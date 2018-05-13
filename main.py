@@ -1,15 +1,8 @@
-from PIL import Image
-import matplotlib.image as image
-import numpy as np
 from os import listdir
+from Network import Network
 
 ROOT = "notMNIST_large"
 DS_STORE = ".DS_Store"
-
-
-def readImageMatrix(path):
-    img = image.imread(path)
-    return np.asmatrix(img)
 
 
 def createDataSet():
@@ -30,3 +23,4 @@ def createDataSet():
 
 if __name__ == "__main__":
     ds = createDataSet()
+    net = Network(ds, 30)
