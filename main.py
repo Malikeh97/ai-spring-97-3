@@ -1,11 +1,20 @@
 from os import listdir
 from Network import Network
+from Option import Option
 
-ROOT = "notMNIST_large"
+ROOT = "./notMNIST_small"
 DS_STORE = ".DS_Store"
 
 
-def createDataSet():
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
+def create_data_set():
     folders = listdir(ROOT)
     if DS_STORE in folders:
         folders.remove(DS_STORE)
@@ -22,5 +31,17 @@ def createDataSet():
 
 
 if __name__ == "__main__":
-    ds = createDataSet()
-    net = Network(ds, 30)
+    ds = create_data_set()
+    option = Option()
+    optimization = input("Optimization?\n1)Gradient Descent (Default)\n2)Stochastic Gradient Descent\n")
+    activation = input("Activation?\n1)Linear\n2)Sigmoid (Default)\n")
+    regularization = input("Regularization?\n1)Drop out (Default)\n2)L2 Norm\n")
+
+    if is_int(optimization):
+        option.set_optimization(int(optimization))
+    if is_int(activation):
+        option.set_activation(int(activation))
+    if is_int(regularization):
+        option.set_regularization(int(regularization))
+    net = Network(ds, option)
+    net.iterate()

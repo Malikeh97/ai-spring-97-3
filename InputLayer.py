@@ -8,8 +8,8 @@ class InputLayer:
     def __init__(self, training_set):
         self.training_set = training_set
 
-
     def get_input(self, index):
+        print(self.training_set[index])
         img = image.imread(self.training_set[index])
         array = np.array([])
         for i in range(28):
@@ -18,3 +18,6 @@ class InputLayer:
 
     def shuffle_training_set(self):
         random.shuffle(self.training_set)
+
+    def training_set_size(self):
+        return len(self.training_set)
