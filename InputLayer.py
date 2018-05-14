@@ -9,8 +9,9 @@ class InputLayer:
         self.training_set = training_set
 
     def get_input(self, index):
-        print(self.training_set[index])
-        img = image.imread(self.training_set[index])
+        path = self.get_path(index)
+        print(path)
+        img = image.imread(path)
         array = np.array([])
         for i in range(28):
             array = np.concatenate((array, img[i]))
@@ -21,3 +22,6 @@ class InputLayer:
 
     def training_set_size(self):
         return len(self.training_set)
+
+    def get_path(self, index):
+        return self.training_set[index]
