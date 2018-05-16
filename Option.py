@@ -14,7 +14,7 @@ class Option:
     def __init__(self):
         self.__optimization = Option.__GD
         self.__activation = Option.__SIGMOID
-        self.__regularization = Option.__DROPOUT
+        self.__regularization = Option.__L2NORM
 
     def set_optimization(self, optimization):
         if optimization == 1 or optimization == 2:

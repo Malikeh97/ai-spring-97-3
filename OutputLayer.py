@@ -1,3 +1,6 @@
+import time
+
+import numpy as np
 from Layer import Layer
 
 
@@ -17,11 +20,19 @@ class OutputLayer(Layer):
         return error / 2
 
     def back_propagate(self, hid_out):
-        num_of_rows, num_of_cols = self.weights.shape
-        for i in range(num_of_cols):
-            for j in range(num_of_rows):
-                delta = self.__delta_rule(self.get_output()[0, i], self.__desired_output[i], hid_out[0, j])
-                self.weights[j, i] -= Layer.LR * delta
+        delta = self.__delta(hid_out)
+        self.weights -= Layer.LR * delta
 
-    def __delta_rule(self, actual, desired, out_h):
-        return (actual - desired) * actual * (1 - actual) * out_h
+    def __delta(self, out_h):
+        loss_deriv = self.loss_deriv(self.get_output(), self.get_desired_output())
+        out_net = self.activation_deriv(self.get_output())
+        mult = np.multiply(loss_deriv, out_net)
+        out_h
+        delta = np.dot(out_h.T, mult)
+        return delta
+
+    def get_desired_output(self):
+        return self.__desired_output
+
+    def get_desired_output_by_index(self, i):
+        return self.__desired_output[i]
