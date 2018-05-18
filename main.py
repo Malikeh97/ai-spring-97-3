@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     if option.is_linear():
         print("\tActivation Function: Linear")
-    elif option.is_sgd():
+    elif option.is_sigmoid():
         print("\tActivation Function: Sigmoid")
 
     if option.is_l2norm():
