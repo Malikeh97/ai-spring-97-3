@@ -11,7 +11,7 @@ class HiddenLayer(Layer):
         delta = self.__delta(inp, out_layer)
         w = np.copy(self.weights)
         if self.option.is_gd():
-            self.weights -= np.subtract(w, Layer.LR * delta.T)
+            self.weights = np.subtract(w, Layer.LR * delta.T)
         elif self.option.is_sgd():
             self.weights -= Layer.LR * delta
         if self.option.is_l2norm():
