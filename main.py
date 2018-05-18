@@ -7,9 +7,9 @@ from Option import Option
 
 ROOT = "./notMNIST_small"
 DS_STORE = ".DS_Store"
-TRAINING = 10
+TRAINING = 75
 TEST = TRAINING + 100
-NUM_OF_ITER = 100
+NUM_OF_ITER = 1000
 
 
 def is_int(s):
