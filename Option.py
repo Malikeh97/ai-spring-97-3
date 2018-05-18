@@ -12,7 +12,7 @@ class Option:
     __L2NORM = 31
 
     def __init__(self):
-        self.__optimization = Option.__GD
+        self.__optimization = Option.__SGD
         self.__activation = Option.__SIGMOID
         self.__regularization = Option.__L2NORM
 

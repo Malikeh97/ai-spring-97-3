@@ -1,13 +1,14 @@
 import matplotlib.image as image
 import numpy as np
 from os import listdir
+from laplotter import LossAccPlotter
 from Network import Network
 from Option import Option
 
 ROOT = "./notMNIST_small"
 DS_STORE = ".DS_Store"
-TRAINING = 50
-TEST = TRAINING + 2
+TRAINING = 75
+TEST = TRAINING + 100
 
 def is_int(s):
     try:
@@ -31,11 +32,8 @@ def create_data_set():
     if DS_STORE in folders:
         folders.remove(DS_STORE)
 
-    training_set = np.array([])
-    training_label = []
-    test_set = np.array([])
-    test_label = []
-    flag1 = flag2 = False
+    training_set = []
+    test_set = []
     for folder in folders:
         files = listdir("%s/%s" % (ROOT, folder))
         if DS_STORE in files:
@@ -48,27 +46,17 @@ def create_data_set():
 
             img = read_input("%s/%s/%s" % (ROOT, folder, file))
             if i < TRAINING:
-                training_label.append(folder)
-                if not flag1:
-                    training_set = img
-                    flag1 = True
-                else:
-                    training_set = np.vstack((training_set, img))
+                training_set.append((folder, img))
             elif TRAINING <= i < TEST:
-                test_label.append(folder)
-                if not flag2:
-                    test_set = img
-                    flag2 = True
-                else:
-                    test_set = np.vstack((test_set, img))
+                test_set.append((folder, img))
             i += 1
-    return (training_set, training_label), (test_set, test_label)
+    return training_set, test_set
 
 
 if __name__ == "__main__":
     training, test = create_data_set()
     option = Option()
-    optimization = input("Optimization?\n1)Gradient Descent (Default)\n2)Stochastic Gradient Descent\n")
+    optimization = input("Optimization?\n1)Gradient Descent\n2)Stochastic Gradient Descent (Default)\n")
     activation = input("Activation?\n1)Linear\n2)Sigmoid (Default)\n")
     regularization = input("Regularization?\n1)Drop out\n2)L2 Norm (Default)\n")
 
@@ -79,8 +67,11 @@ if __name__ == "__main__":
     if is_int(regularization):
         option.set_regularization(int(regularization))
     net = Network(training, test, option)
+    plotter = LossAccPlotter(show_acc_plot=False)
     for i in range(1000):
-        if i % 10:
+        if i % 10 == 0:
             print(i)
-        net.iterate()
-    net.test()
+        training_loss = net.train()
+        test_loss = net.test()
+        plotter.add_values(i, loss_train=training_loss, loss_val=test_loss)
+    plotter.block()

@@ -4,18 +4,15 @@ import random
 
 class InputLayer:
 
-    def __init__(self, training_set, test_set):
-        self.training_set = training_set[0]
-        self.training_set_label = training_set[1]
-        self.test_set = test_set[0]
-        self.test_set_label = test_set[1]
+    def __init__(self, training, test):
+        self.training_set = training
+        self.test_set = test
         self.training_ptr = 0
         self.test_ptr = 0
-        print(np.array_equal(self.get_test_image(0), self.get_test_image(1)))
 
     def get_image(self, i):
         self.training_ptr = i
-        return np.asmatrix(self.training_set[i])
+        return np.asmatrix(self.training_set[i][1])
 
     def get_all_input(self):
         return self.get_image(self.training_ptr)
@@ -25,13 +22,13 @@ class InputLayer:
 
     def get_test_image(self, i):
         self.test_ptr = i
-        return np.asmatrix(self.test_set[i])
+        return np.asmatrix(self.test_set[i][1])
 
     def get_training_label(self, i):
-        return self.training_set_label[i]
+        return self.training_set[i][0]
 
     def get_test_label(self, i):
-        return self.test_set_label[i]
+        return self.test_set[i][0]
 
     def training_set_size(self):
         return len(self.training_set)
@@ -41,3 +38,9 @@ class InputLayer:
 
     def get_path(self, index):
         return self.training_set[index]
+
+    def shuffle_training_set(self):
+        np.random.shuffle(self.training_set)
+
+    def shuffle_test_set(self):
+        np.random.shuffle(self.test_set)

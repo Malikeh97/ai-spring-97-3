@@ -2,8 +2,9 @@ import numpy as np
 
 
 class Layer:
-    LR = 0.05  # learning rate
+    LR = 0.5  # learning rate
     LANDA = 0.03
+
 
     def __init__(self, prev_layer_size, cur_layer_size, option):
         np.random.seed(1)
@@ -14,8 +15,6 @@ class Layer:
 
     def calc(self, data_set):
         out = np.dot(data_set, self.weights)
-        if self.option.is_l2norm():
-            out += Layer.LANDA * self.calc_l2_reg()
         out += self.bias
         if self.option.is_linear():
             self.__output = self.__linear(out)
@@ -24,9 +23,9 @@ class Layer:
 
     def activation_deriv(self, x):
         if self.option.is_sigmoid():
-            return self.__sigmoid(x)
+            return self.__sigmoid(x, deriv=True)
         elif self.option.is_linear():
-            return self.__linear(x)
+            return self.__linear(x, deriv=True)
 
     def loss_deriv(self, actual, desired):
         return actual - desired
@@ -38,7 +37,7 @@ class Layer:
     
     def __sigmoid(self, x, deriv=False):
         if deriv:
-            return x * (1 - x)
+            return np.multiply(x, 1 - x)
 
         return 1 / (1 + np.exp(-x))
 
@@ -61,7 +60,6 @@ class Layer:
     def get_weights_by_index(self, i, j):
         return self.weights[i, j]
 
-    def calc_l2_reg(self):
-        # sum = np.sum(self.weights * self.weights)
-        # return sum / 2
-        return 0
+    def l2norm(self):
+        s = np.sum(np.power(self.weights, 2))
+        return s / 2

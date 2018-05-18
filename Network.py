@@ -1,3 +1,5 @@
+import numpy as np
+
 from InputLayer import InputLayer
 from HiddenLayer import HiddenLayer
 from OutputLayer import OutputLayer
@@ -19,34 +21,51 @@ class Network:
         self.__inLayer = InputLayer(training_set, test_set)
         self.__hidLayer = HiddenLayer(28 * 28, 30, option)
         self.__outLayer = OutputLayer(30, 10, option)
+        self.option = option
 
-    def iterate(self):
+    def train(self):
+        self.__inLayer.shuffle_training_set()
+        loss = 0
         for i in range(self.__inLayer.training_set_size()):
-        # for i in range(1):
-        #     print("-------- %d - %c --------" % (i, self.__inLayer.get_training_label(i)))
+
             desired_output = self.get_desired_output(self.__inLayer.get_training_label(i))
             self.__outLayer.set_desired_output(desired_output)
+
             inp = self.__inLayer.get_image(i)
             self.__hidLayer.calc(inp)
             self.__outLayer.calc(self.__hidLayer.get_output())
-            # print("loss:")
-            # print(self.__outLayer.loss_function())
+
+            loss += self.__outLayer.loss_function()
+
             self.__outLayer.back_propagate(self.__hidLayer.get_output())
             self.__hidLayer.back_propagate(self.__inLayer, self.__outLayer)
-            
+
+        return loss / self.__inLayer.training_set_size()
+
     def test(self):
+        count = 0
+        loss = 0
         for i in range(self.__inLayer.test_set_size()):
+
             desired_output = self.get_desired_output(self.__inLayer.get_test_label(i))
             self.__outLayer.set_desired_output(desired_output)
+
             inp = self.__inLayer.get_test_image(i)
             self.__hidLayer.calc(inp)
             self.__outLayer.calc(self.__hidLayer.get_output())
-            print("--------------")
-            print("must be: %s" % self.__inLayer.get_test_label(i))
-            print(self.__outLayer.get_output())
-            print("loss: %f" % self.__outLayer.loss_function())
-            # print(self.__outLayer.get_output())
-        
+
+            loss += self.__outLayer.loss_function()
+
+            must_be = self.__inLayer.get_test_label(i)
+            y_predict = np.zeros(10, dtype=np.int)
+            max_i = np.argmax(self.__outLayer.get_output())
+            y_predict[max_i] = 1
+            prediction = self.prediction(tuple(y_predict))
+            if must_be == prediction:
+                count += 1
+
+        print("avg: %f" % (count / self.__inLayer.test_set_size()))
+        return loss / self.__inLayer.test_set_size()
 
     def get_desired_output(self, desired):
         if desired == "A":
@@ -69,3 +88,25 @@ class Network:
             return Network.__I
         elif desired == "J":
             return Network.__J
+
+    def prediction(self, output):
+        if output == Network.__A:
+            return "A"
+        elif output == Network.__B:
+            return "B"
+        elif output == Network.__C:
+            return "C"
+        elif output == Network.__D:
+            return "D"
+        elif output == Network.__E:
+            return "E"
+        elif output == Network.__F:
+            return "F"
+        elif output == Network.__G:
+            return "G"
+        elif output == Network.__H:
+            return "H"
+        elif output == Network.__I:
+            return "I"
+        elif output == Network.__J:
+            return "J"
