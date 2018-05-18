@@ -1,7 +1,4 @@
-
-
 class Option:
-
     __GD = 10
     __SGD = 11
 

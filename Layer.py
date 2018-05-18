@@ -5,13 +5,17 @@ class Layer:
     LR = 0.5  # learning rate
     LANDA = 0.03
 
-
     def __init__(self, prev_layer_size, cur_layer_size, option):
-        # np.random.seed(1)
         self.weights = 2 * np.random.rand(prev_layer_size, cur_layer_size) - 1  # [-1, 1)
         self.bias = np.asmatrix(np.random.rand(1, cur_layer_size))
         self.option = option
         self.__output = None
+
+    def set_weights(self, weights):
+        self.weights = weights
+
+    def set_bias(self, bias):
+        self.bias = bias
 
     def calc(self, data_set):
         out = np.dot(data_set, self.weights)
@@ -51,6 +55,9 @@ class Layer:
 
     def get_weights(self):
         return self.weights
+
+    def get_bias(self):
+        return self.bias
 
     def get_weights_by_index(self, i, j):
         return self.weights[i, j]

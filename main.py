@@ -7,9 +7,10 @@ from Option import Option
 
 ROOT = "./notMNIST_small"
 DS_STORE = ".DS_Store"
-TRAINING = 150
+TRAINING = 10
 TEST = TRAINING + 100
-NUM_OF_ITER = 1000
+NUM_OF_ITER = 100
+
 
 def is_int(s):
     try:
@@ -61,6 +62,9 @@ if __name__ == "__main__":
     activation = input("Activation?\n1)Linear\n2)Sigmoid (Default)\n")
     regularization = input("Regularization?\n1)Drop out (Default)\n2)L2 Norm\n")
 
+    read_weights_from_file = input("Read weights from file?(y/N)")
+    print()
+
     if is_int(optimization):
         option.set_optimization(int(optimization))
     if is_int(activation):
@@ -68,7 +72,8 @@ if __name__ == "__main__":
     if is_int(regularization):
         option.set_regularization(int(regularization))
 
-    print("Options:\n\tSize of training set: %d\n\tSize of test set: %d\n\tNumber of iterates: %d" % (10 * TRAINING, 10 * (TEST - TRAINING), NUM_OF_ITER))
+    print("Options:\n\tSize of training set: %d\n\tSize of test set: %d\n\tNumber of iterates: %d" % (
+    10 * TRAINING, 10 * (TEST - TRAINING), NUM_OF_ITER))
     if option.is_gd():
         print("\tOptimization: Gradient Descent")
     elif option.is_sgd():
@@ -85,9 +90,16 @@ if __name__ == "__main__":
         print("\tRegularization: Drop out")
 
     net = Network(training, test, option)
+    if read_weights_from_file == "y":
+        loaded = np.load('weights.npz')
+        net.set_hid_weights(loaded['hid_weights']).set_out_weights(loaded['out_weights']).set_hid_bias(
+            loaded['hid_bias']).set_out_bias(loaded['out_bias'])
+
     plotter = LossAccPlotter(show_acc_plot=False)
     for i in range(NUM_OF_ITER):
-        training_loss = net.train()
+        training_loss = 0
+        if read_weights_from_file != "y":
+            training_loss = net.train(i == NUM_OF_ITER - 1)
         test_loss = net.test(i == NUM_OF_ITER - 1)
         plotter.add_values(i, loss_train=training_loss, loss_val=test_loss)
     plotter.block()

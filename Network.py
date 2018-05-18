@@ -23,13 +23,28 @@ class Network:
         self.__outLayer = OutputLayer(30, 10, option)
         self.option = option
 
-    def train(self):
+    def set_hid_weights(self, weights):
+        self.__hidLayer.set_weights(weights)
+        return self
+
+    def set_out_weights(self, weights):
+        self.__outLayer.set_weights(weights)
+        return self
+
+    def set_hid_bias(self, bias):
+        self.__hidLayer.set_bias(bias)
+        return self
+
+    def set_out_bias(self, bias):
+        self.__outLayer.set_bias(bias)
+        return self
+
+    def train(self, last_time):
         loss = 0
         for i in range(self.__inLayer.training_set_size()):
 
             desired_output = self.get_desired_output(self.__inLayer.get_training_label(i))
             self.__outLayer.set_desired_output(desired_output)
-
 
             inp = self.__inLayer.get_image(i)
             if self.option.is_dropout():
@@ -47,7 +62,10 @@ class Network:
 
             self.__outLayer.back_propagate(hid)
             self.__hidLayer.back_propagate(inp, self.__outLayer)
-
+        if last_time:
+            np.savez_compressed('weights', hid_weights=self.__hidLayer.get_weights(),
+                                out_weights=self.__outLayer.get_weights(), hid_bias=self.__hidLayer.get_bias(),
+                                out_bias=self.__outLayer.get_bias())
         return loss / self.__inLayer.training_set_size()
 
     def test(self, last_time):
