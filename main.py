@@ -9,6 +9,7 @@ ROOT = "./notMNIST_small"
 DS_STORE = ".DS_Store"
 TRAINING = 75
 TEST = TRAINING + 100
+NUM_OF_ITER = 1000
 
 def is_int(s):
     try:
@@ -68,7 +69,7 @@ if __name__ == "__main__":
         option.set_regularization(int(regularization))
     net = Network(training, test, option)
     plotter = LossAccPlotter(show_acc_plot=False)
-    for i in range(1000):
+    for i in range(NUM_OF_ITER):
         if i % 10 == 0:
             print(i)
         training_loss = net.train()
