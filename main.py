@@ -87,7 +87,8 @@ if __name__ == "__main__":
     net = Network(training, test, option)
     plotter = LossAccPlotter(show_acc_plot=False)
     for i in range(NUM_OF_ITER):
+        print(i)
         training_loss = net.train()
-        test_loss = net.test()
+        test_loss = net.test(i == NUM_OF_ITER - 1)
         plotter.add_values(i, loss_train=training_loss, loss_val=test_loss)
     plotter.block()

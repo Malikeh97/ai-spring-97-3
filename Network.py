@@ -50,7 +50,7 @@ class Network:
 
         return loss / self.__inLayer.training_set_size()
 
-    def test(self):
+    def test(self, last_time):
         count = 0
         loss = 0
         for i in range(self.__inLayer.test_set_size()):
@@ -71,8 +71,8 @@ class Network:
             prediction = self.prediction(tuple(y_predict))
             if must_be == prediction:
                 count += 1
-
-        # print("avg: %f" % (count / self.__inLayer.test_set_size()))
+        if last_time:
+            print("accuracy: %.2f%%" % (100 * count / self.__inLayer.test_set_size()))
         return loss / self.__inLayer.test_set_size()
 
     def get_desired_output(self, desired):
