@@ -18,27 +18,35 @@ class Network:
     __J = (0, 0, 0, 0, 0, 0, 0, 0, 0, 1)
 
     def __init__(self, training_set, test_set, option):
-        self.__inLayer = InputLayer(training_set, test_set)
+        self.__inLayer = InputLayer(training_set, test_set, option)
         self.__hidLayer = HiddenLayer(28 * 28, 30, option)
         self.__outLayer = OutputLayer(30, 10, option)
         self.option = option
 
     def train(self):
-        self.__inLayer.shuffle_training_set()
         loss = 0
         for i in range(self.__inLayer.training_set_size()):
 
             desired_output = self.get_desired_output(self.__inLayer.get_training_label(i))
             self.__outLayer.set_desired_output(desired_output)
 
+
             inp = self.__inLayer.get_image(i)
+            if self.option.is_dropout():
+                prob = np.random.randint(0, 2, (1, 784))
+                inp = np.multiply(inp, prob)
             self.__hidLayer.calc(inp)
-            self.__outLayer.calc(self.__hidLayer.get_output())
+
+            hid = self.__hidLayer.get_output()
+            if self.option.is_dropout():
+                prob = np.random.randint(0, 2, (1, 30))
+                hid = np.multiply(hid, prob)
+            self.__outLayer.calc(hid)
 
             loss += self.__outLayer.loss_function()
 
-            self.__outLayer.back_propagate(self.__hidLayer.get_output())
-            self.__hidLayer.back_propagate(self.__inLayer, self.__outLayer)
+            self.__outLayer.back_propagate(hid)
+            self.__hidLayer.back_propagate(inp, self.__outLayer)
 
         return loss / self.__inLayer.training_set_size()
 

@@ -7,8 +7,8 @@ class HiddenLayer(Layer):
     def __init__(self, prev_layer_size, cur_layer_size, option):
         super().__init__(prev_layer_size, cur_layer_size, option)
 
-    def back_propagate(self, in_layer, out_layer):
-        delta = self.__delta(in_layer, out_layer)
+    def back_propagate(self, inp, out_layer):
+        delta = self.__delta(inp, out_layer)
         w = np.copy(self.weights)
         if self.option.is_gd():
             self.weights -= np.subtract(w, Layer.LR * delta.T)
@@ -17,7 +17,7 @@ class HiddenLayer(Layer):
         if self.option.is_l2norm():
             self.weights -= Layer.LANDA * w
 
-    def __delta(self, in_layer, out_layer):
+    def __delta(self, inp, out_layer):
         loss_deriv = self.loss_deriv(out_layer.get_output(), out_layer.get_desired_output())
         out_net = self.activation_deriv(out_layer.get_output())
         mult = np.multiply(out_net, loss_deriv)
@@ -27,7 +27,7 @@ class HiddenLayer(Layer):
         delta = 0
         if self.option.is_gd():
             sum2 = np.sum(mult2) / (mult2.shape[0] * mult2.shape[1])
-            delta = sum2 * in_layer.get_all_input()
+            delta = sum2 * inp
         elif self.option.is_sgd():
-            delta = np.dot(in_layer.get_all_input().T, mult2)
+            delta = np.dot(inp.T, mult2)
         return delta

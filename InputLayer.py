@@ -1,12 +1,13 @@
 import numpy as np
-import random
 
 
 class InputLayer:
 
-    def __init__(self, training, test):
+    def __init__(self, training, test, option):
         self.training_set = training
         self.test_set = test
+        if option.is_sgd():
+            self.shuffle_training_set()
         self.training_ptr = 0
         self.test_ptr = 0
 

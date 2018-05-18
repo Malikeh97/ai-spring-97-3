@@ -58,7 +58,7 @@ if __name__ == "__main__":
     option = Option()
     optimization = input("Optimization?\n1)Gradient Descent\n2)Stochastic Gradient Descent (Default)\n")
     activation = input("Activation?\n1)Linear\n2)Sigmoid (Default)\n")
-    regularization = input("Regularization?\n1)Drop out\n2)L2 Norm (Default)\n")
+    regularization = input("Regularization?\n1)Drop out (Default)\n2)L2 Norm\n")
 
     if is_int(optimization):
         option.set_optimization(int(optimization))
