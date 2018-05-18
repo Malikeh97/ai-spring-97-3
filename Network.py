@@ -72,7 +72,7 @@ class Network:
             if must_be == prediction:
                 count += 1
 
-        print("avg: %f" % (count / self.__inLayer.test_set_size()))
+        # print("avg: %f" % (count / self.__inLayer.test_set_size()))
         return loss / self.__inLayer.test_set_size()
 
     def get_desired_output(self, desired):

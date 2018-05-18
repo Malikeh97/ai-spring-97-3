@@ -30,11 +30,6 @@ class Layer:
     def loss_deriv(self, actual, desired):
         return actual - desired
 
-    # def net_deriv(self, out_h, w):
-    #     if self.option.is_l2norm():
-    #         return out_h + Layer.LANDA * w
-    #     return out_h
-    
     def __sigmoid(self, x, deriv=False):
         if deriv:
             return np.multiply(x, 1 - x)

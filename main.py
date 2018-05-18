@@ -67,11 +67,26 @@ if __name__ == "__main__":
         option.set_activation(int(activation))
     if is_int(regularization):
         option.set_regularization(int(regularization))
+
+    print("Options:\n\tSize of training set: %d\n\tSize of test set: %d\n\tNumber of iterates: %d" % (10 * TRAINING, 10 * (TEST - TRAINING), NUM_OF_ITER))
+    if option.is_gd():
+        print("\tOptimization: Gradient Descent")
+    elif option.is_sgd():
+        print("\tOptimization: Stochastic Gradient Descent")
+
+    if option.is_linear():
+        print("\tActivation Function: Linear")
+    elif option.is_sgd():
+        print("\tActivation Function: Sigmoid")
+
+    if option.is_l2norm():
+        print("\tRegularization: L2Norm")
+    elif option.is_dropout():
+        print("\tRegularization: Drop out")
+
     net = Network(training, test, option)
     plotter = LossAccPlotter(show_acc_plot=False)
     for i in range(NUM_OF_ITER):
-        if i % 10 == 0:
-            print(i)
         training_loss = net.train()
         test_loss = net.test()
         plotter.add_values(i, loss_train=training_loss, loss_val=test_loss)
