@@ -23,7 +23,7 @@ class HiddenLayer(Layer):
         mult = np.multiply(out_net, loss_deriv)
         sum = np.dot(mult, out_layer.get_weights().T)
         hid_net = self.activation_deriv(self.get_output())
-        mult2 = np.multiply(hid_net ,sum)
+        mult2 = np.multiply(hid_net, sum)
         delta = 0
         if self.option.is_gd():
             sum2 = np.sum(mult2) / (mult2.shape[0] * mult2.shape[1])
