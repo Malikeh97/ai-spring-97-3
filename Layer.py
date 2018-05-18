@@ -7,7 +7,7 @@ class Layer:
 
 
     def __init__(self, prev_layer_size, cur_layer_size, option):
-        np.random.seed(1)
+        # np.random.seed(1)
         self.weights = 2 * np.random.rand(prev_layer_size, cur_layer_size) - 1  # [-1, 1)
         self.bias = np.asmatrix(np.random.rand(1, cur_layer_size))
         self.option = option
